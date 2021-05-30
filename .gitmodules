@@ -1,0 +1,3 @@
+[submodule "3rdparty/ZLMediaKit"]
+	path = 3rdparty/ZLMediaKit
+	url = git@github.com:4e4o/ZLMediaKit.git
