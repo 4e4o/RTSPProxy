@@ -30,9 +30,22 @@ int main(int count, char **argv) {
 
     set<PlayerProxy::Ptr> proxyMap;
     int i = 0;
-    for(auto url : sources){
+    for(auto& url : sources){
         PlayerProxy::Ptr player(new PlayerProxy(DEFAULT_VHOST, "proxy", to_string(i++).data(),
                                                 false));
+
+        if (url.rfind("udp:", 0) == 0) {
+            player->setOnPlayerCreatedEvent([] (PlayerBase::Ptr ptr) {
+                RtspPlayer::Ptr rtspPlayer = dynamic_pointer_cast<RtspPlayer>(ptr);
+
+                if (rtspPlayer) {
+                    rtspPlayer->setRtpType(Rtsp::eRtpType::RTP_UDP);
+                }
+            });
+
+            url = url.erase(0, 4);
+        }
+
         player->play(url);
         proxyMap.emplace(player);
     }
