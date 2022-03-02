@@ -1,0 +1,13 @@
+[Unit]
+Description=rtsp proxy service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bash -c '/usr/local/bin/rtsp_proxy --c /usr/local/etc/rtsp_proxy/config.ini'
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

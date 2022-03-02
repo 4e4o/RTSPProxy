@@ -9,21 +9,32 @@
 using namespace std;
 
 int main(int count, char **argv) {
-    if (count < 4) {
-        std::cout << "ip port sources" << std::endl;
+    if (count != 2) {
+        std::cout << "<config_path>" << std::endl;
         return 1;
     }
 
-    string ip(argv[1]);
-    string port_str(argv[2]);
+    mINI_basic<string, variant> config;
+    config.parseFile(argv[1]);
+
+    const string ip = config["main.ip"];
+    const string port_str = config["main.port"];
+    const int port = std::stoi(port_str);
+
     vector<string> sources;
 
-    for (int i = 3 ; i < count ; i++)
-        sources.emplace_back(argv[i]);
+    for (int i = 0 ; ; i++) {
+        const string key = "url." + std::to_string(i);
 
-    int port = std::stoi(port_str);
+        if (!config.count(key))
+            break;
 
+        sources.push_back(config[key]);
+    }
+
+#ifndef NDEBUG
     Logger::Instance().add(std::make_shared<ConsoleChannel>("ConsoleChannel", LogLevel::LDebug));
+#endif
 
     TcpServer::Ptr rtspSrv(new TcpServer());
     rtspSrv->start<RtspSession>(port, ip);
