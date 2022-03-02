@@ -5,7 +5,7 @@ StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/bash -c '/usr/local/bin/rtsp_proxy --c /usr/local/etc/rtsp_proxy/config.ini'
+ExecStart=/usr/bin/bash -c '/usr/local/bin/rtsp_proxy /usr/local/etc/rtsp_proxy/config.ini'
 Restart=always
 RestartSec=5
 
